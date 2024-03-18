@@ -1,7 +1,7 @@
 import csv
 
 # 기존 CSV 파일 경로
-input_file = '챌린저 데이터.csv'
+input_file = '../챌린저 데이터.csv'
 
 # 새로 작성될 CSV 파일 경로
 output_file = '정리된데이터.csv'

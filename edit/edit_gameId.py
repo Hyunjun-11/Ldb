@@ -1,7 +1,7 @@
 import json
 
 # 파일 이름
-file_name = 'matches.json'
+file_name = '../json/matches.json'
 
 # 파일에서 데이터 읽어오기
 with open(file_name, 'r') as file:

@@ -1,7 +1,7 @@
 import json
 
 # 파일 이름
-file_name = 'info.json'
+file_name = '../json/info.json'
 
 # 파일에서 데이터 읽어오기
 with open(file_name, 'r', encoding="utf-8") as file:

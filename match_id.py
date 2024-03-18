@@ -5,7 +5,7 @@ import common
 import json
 
 # 정리된 CSV 파일 경로
-input_file = '정리된데이터.csv'
+input_file = '챌린저 데이터.csv'
 
 # CSV 파일 읽기
 df = pd.read_csv(input_file)
@@ -47,7 +47,7 @@ for puuid in puuids:
             break  # 예외 발생 시 재시도 중단
 
 # matches 딕셔너리를 JSON 파일로 저장
-with open('matches.json', 'w') as file:
+with open('json/matches.json', 'w') as file:
     json.dump(matches, file, ensure_ascii=False, indent=4)
 
 print("매치 ID가 matches.json 파일에 저장되었습니다.")
