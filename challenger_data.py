@@ -25,7 +25,7 @@ def get_puuids(api_key, league_df):
     puuids = []  # puuid들을 담을 빈 리스트
 
     for index, row in league_df.iterrows():
-        if index >= 10:  # 20번째 인덱스에 도달하면 반복 중단
+        if index >= 300:  # 20번째 인덱스에 도달하면 반복 중단
             break
         print(row['summonerName'])
         summoner_url = f"https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/{row['summonerName']}?api_key={api_key}"
@@ -38,7 +38,7 @@ def get_puuids(api_key, league_df):
             puuid = response.json().get('puuid')
             if puuid:
                 puuids.append(puuid)  # puuid를 리스트에 추가
-                print(puuid)
+                # print(puuid)
             else:
                 print(f"Error fetching puuid for {row['summonerName']}: No puuid found")
         else:
