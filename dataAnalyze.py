@@ -15,9 +15,9 @@ for key, value in info_values.items():
     print(f"{key} : {type(value)}")
 
 
-for frame in data['info']['frames']:
+for frame in data['info']['frames'][:10]:
     events = frame.get('events')
-    for event_data in events:
+    for event_data in events:  # 처음 10개 이벤트 데이터만을 순회
         timestamp = event_data.get('timestamp')  # 밀리초를 분으로 변환
         realTime = timestamp/60000
         minutes = int(realTime)  # 소수점 이하 버림
@@ -44,4 +44,3 @@ for frame in data['info']['frames']:
             #   level,
             #   killerId,
               )
-
