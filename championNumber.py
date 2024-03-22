@@ -20,15 +20,15 @@ file_list = os.listdir(championNum)
 json_files = [file for file in file_list if file.endswith('.json')]
 
 # 각 JSON 파일에서 "name" 필드 추출하기
-# for json_file in json_files:
-#     with open(os.path.join(championNum, json_file), 'r', encoding='utf-8') as f:
-#         data = json.load(f)
-#         if isinstance(data["data"], dict):  # 데이터가 딕셔너리인 경우에만 처리
-#             for champion, champion_data in data["data"].items():
-#                 champion_id = champion_data["id"]
-#                 champion_name = champion_data["name"]
-#                 champion_key = champion_data["key"]
-#                 print(champion_id, champion_name, champion_key)
+for json_file in json_files:
+    with open(os.path.join(championNum, json_file), 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        if isinstance(data["data"], dict):  # 데이터가 딕셔너리인 경우에만 처리
+            for champion, champion_data in data["data"].items():
+                champion_id = champion_data["id"]
+                champion_name = champion_data["name"]
+                champion_key = champion_data["key"]
+                print(champion_id, champion_name, champion_key)
 #                 # MongoDB에 삽입
 #                 collection.insert_one({
 #                     "name": champion_name,
@@ -49,8 +49,9 @@ for item_id, item_info in data["data"].items():
     item_name = item_info["name"]
     colloq = item_info["colloq"]
     print("아이템 ID:", item_id, "/  아이템 이름:", item_name)
-    collection.insert_one({
-        "name": item_name,
-        "key": item_id,
-        "path": f"{item_id}.png"
-    })
+    # MongoDB에 삽입
+    # collection.insert_one({
+    #     "name": item_name,
+    #     "key": item_id,
+    #     "path": f"{item_id}.png"
+    # })
