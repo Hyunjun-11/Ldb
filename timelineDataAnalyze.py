@@ -8,9 +8,8 @@ client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client['Ldb']
 
 # 컬렉션 선택
+#아이템 정보 불러오기
 collection = db['itemsInfo']
-
-
 file_path = "jst.json"
 
 data = common.load_json(file_path)
@@ -20,19 +19,13 @@ GREEN = "\033[32m"  # 초록색 텍스트
 YELLOW = "\033[33m"  # 노란색 텍스트
 RESET = "\033[0m"
 
-# print(data.keys())
-#
-# print(data['metadata'].keys())
-# print(data['info'].keys())
-
-info_values = data['info']
 
 def timestamp(event):
     timestamp = event.get('timestamp')  # 밀리초를 분으로 변환
     realTime = timestamp / 60000
     minutes = int(realTime)  # 소수점 이하 버림
     seconds = int((realTime - minutes) * 60)
-    return f"{timestamp}===={minutes}분 {seconds}초"  # 시간 문자열 반환
+    return f"{minutes}분 {seconds}초 == "  # 시간 문자열 반환
 
 def lane(event):
     
@@ -61,13 +54,13 @@ def lane(event):
 
 
 # 예시 이벤트 유형별 처리 함수
-def print_item_purchased(event):
+def item_purchased(event):
     itemId = str(event.get('itemId'))
     item_info = collection.find_one({"key": itemId})
     item_name = item_info.get('name') if item_info else "알 수 없는 아이템"
     print(timestamp(event),lane(event.get("participantId")), f"아이템 {RED}[{item_name}]{RESET} 구입 ")
 
-def print_skill_level_up(event):
+def skill_level_up(event):
     skill_up =event.get("skillSlot")
     if skill_up == 1:
         skill_up = "q"
@@ -79,7 +72,7 @@ def print_skill_level_up(event):
         skill_up = "r"
     print(timestamp(event), lane(event.get("participantId")), {skill_up},"선택")
 
-def print_champion_kill(event):
+def champion_kill(event):
     killer_position = lane(event.get('killerId'))
     victim_position = lane(event.get('victimId'))
     
@@ -100,38 +93,38 @@ def print_champion_kill(event):
     print(f"{YELLOW}{timestamp(event)} 챔피언 처치: 처치자 {killer_position}, 희생자 {victim_position}, 어시스트: {assisting_positions_str}, 획득 골드{bounty}{RESET}")
 
 
-def print_special_kill(event):
+def special_kill(event):
     killType = event.get("killType")
     print(f"{killType}")
 
 
 
-def print_champion_levelUp(event):
+def champion_levelUp(event):
     print(timestamp(event), lane(event.get("participantId")), "레벨업")
 
-def print_item_destroy(event):
+def item_destroy(event):
     print(timestamp(event), lane(event.get("participantId")), "아이템 사용")
 
-def print_item_sold(event):
+def item_sold(event):
     itemId = str(event.get('itemId'))
     item_info = collection.find_one({"key": itemId})
     item_name = item_info.get('name') if item_info else "알 수 없는 아이템"
     print(timestamp(event), lane(event.get("participantId")), f"{RED}[{item_name}]{RESET} 판매")
 
 
-def print_item_undo(event):
+def item_undo(event):
     print(timestamp(event), lane(event.get("participantId")), "아이템 구매 취소(되돌리기)")
 
-def print_ward_placed(event):
+def ward_placed(event):
     print(timestamp(event), lane(event.get("creatorId")), "와드 설치")
-def print_ward_kill(event):
+def ward_kill(event):
     print(timestamp(event), lane(event.get("killerId")), "와드 파괴")
 
-def print_turret_plate_destroyed(event):
+def turret_plate_destroyed(event):
     TurretLane = event.get("laneType")
     print(timestamp(event),lane(event.get("killerId")), f"{TurretLane} 포탑골드 획득")
 
-def print_elite_monster_kill(event):
+def elite_monster_kill(event):
     monsterType = event.get("monsterType")
     monsterSubType = event.get("monsterSubType")  # monsterSubType 초기화
     if monsterType == "DRAGON":
@@ -139,12 +132,12 @@ def print_elite_monster_kill(event):
     elif monsterType =="BARON":
         print(f"{timestamp(event)} {lane(event.get('killerId'))} 엘리트몬스터[{monsterType}]처치")
 
-def print_building_kill(event):
+def building_kill(event):
     towerType=event.get("towerType")
     laneType = event.get("laneType")
     print(f"{common.ConsoleColor.BRIGHT_MAGENTA}{timestamp(event)} {lane(event.get('killerId'))} {laneType} / {towerType}차 터렛 파괴 {common.ConsoleColor.RESET}")
 
-def print_bounty_prstart(event):
+def bounty_prstart(event):
    
     print(f"{timestamp(event)} {event.get('teamId')}팀 의 현상금 활성화")
 
@@ -162,20 +155,20 @@ def print_bounty_prstart(event):
 
 # 이벤트 유형별 함수 매핑
 event_print_functions = {
-    'ITEM_PURCHASED': print_item_purchased,
-    'SKILL_LEVEL_UP': print_skill_level_up,
-    'CHAMPION_KILL': print_champion_kill,
-    'CHAMPION_SPECIAL_KILL':print_special_kill,
-    'ITEM_DESTROYED': print_item_destroy,
-    'LEVEL_UP': print_champion_levelUp,
-    'WARD_PLACED':print_ward_placed,
-    'TURRET_PLATE_DESTROYED':print_turret_plate_destroyed,
-    'WARD_KILL' : print_ward_kill,
-    'ITEM_UNDO' :print_item_undo,
-    'ELITE_MONSTER_KILL': print_elite_monster_kill,
-    'BUILDING_KILL' :print_building_kill,
-    'ITEM_SOLD': print_item_sold,
-    'OBJECTIVE_BOUNTY_PRESTART' : print_bounty_prstart
+    'ITEM_PURCHASED': item_purchased,
+    'SKILL_LEVEL_UP': skill_level_up,
+    'CHAMPION_KILL': champion_kill,
+    'CHAMPION_SPECIAL_KILL':special_kill,
+    'ITEM_DESTROYED': item_destroy,
+    'LEVEL_UP': champion_levelUp,
+    'WARD_PLACED':ward_placed,
+    'TURRET_PLATE_DESTROYED':turret_plate_destroyed,
+    'WARD_KILL' : ward_kill,
+    'ITEM_UNDO' :item_undo,
+    'ELITE_MONSTER_KILL': elite_monster_kill,
+    'BUILDING_KILL' :building_kill,
+    'ITEM_SOLD': item_sold,
+    'OBJECTIVE_BOUNTY_PRESTART' : bounty_prstart
     
    
 }
